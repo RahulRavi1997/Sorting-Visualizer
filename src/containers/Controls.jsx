@@ -56,17 +56,27 @@ class Controls extends React.Component {
       <div className="controls-wrapper">
         <Sorter sortType={sortType} sorting={sorting} paused={paused} speed={speed} bars={bars} barSizes={barSizes} setSorting={this.setSorting} />
         <div className="controls" >
-          <Slider name={"Speed"} value={speed} onChange={this.onChange} values={["Slow", "Medium", "Fast"]} size={2}/>
-          <Slider name={"Bars"} value={bars} onChange={this.onChange} values={[0, 50, 100]} size={100}/>
+          <Slider name={"Speed"} value={speed} onChange={this.onChange} values={["Slow", "Medium", "Fast"]} size={2} />
+          <Slider name={"Bars"} value={bars} onChange={this.onChange} values={[0, 50, 100]} size={100} />
           <div className="sortbuttons">
             <button className={`btn btn-default sort-type ${sortType === "selection" ? "active" : ""}`} disabled={sorting} autoFocus value="selection" onClick={this.selectSort}>Selection Sort</button>
             <button className={`btn btn-default sort-type ${sortType === "bubble" ? "active" : ""}`} disabled={sorting} value="bubble" onClick={this.selectSort}>Bubble Sort</button>
             <button className={`btn btn-default sort-type ${sortType === "quick" ? "active" : ""}`} disabled={sorting} value="quick" onClick={this.selectSort}>Quick Sort</button>
             <button className={`btn btn-default sort-type ${sortType === "merge" ? "active" : ""}`} disabled={sorting} value="merge" onClick={this.selectSort}>Merge Sort</button>
 
-            <button className="btn btn-primary sort" disabled={sorting} onClick={() => { this.setSorting(true) }}>Sort!</button>
-            <button className="btn btn-primary sort" disabled={!sorting} onClick={() => { this.setPaused(!paused)}}>Pause/Play</button>
-            <button className="btn btn-primary sort" onClick={() => { this.setSorting(false); this.props.resetBarSizes(bars)}}>Reset</button>
+            <div className="row m-0">
+              <div className="col-6">
+                <button className="btn btn-primary sort" disabled={sorting} onClick={() => { this.setSorting(true) }}> Sort</button>
+              </div>
+              <div className="col-3">
+                <button className="btn btn-primary sort" disabled={!sorting} onClick={() => { this.setPaused(!paused) }}>
+                  <i className={`fa ${paused ? "fa-play" : "fa-pause"}`} aria-hidden="true"></i></button>
+              </div>
+              <div className="col-3">
+                <button className="btn btn-primary sort" onClick={() => { this.setSorting(false); this.props.resetBarSizes(bars) }}>
+                  <i className="fa fa-refresh" aria-hidden="true"></i></button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
