@@ -1,7 +1,20 @@
+const initialSortObj = {
+  iteration: 0,
+  innerIteration: 0,
+  selectedIteration: 0,
+  leastIndex: Number.MAX_VALUE,
+  leastValue: Number.MAX_VALUE,
+  nextLeftIter: null,
+  nextRightIter: null,
+  pivoti: null,
+  pivotj: null,
+  currentPartition: null,
+  pivot: null,
+  pivots: []
+}
 const initialState = {
   barSizes: Array.from({ length: 50 }, () => Math.floor(Math.random() * 50)),
-  iteration: 1,
-  innerIteration: 0
+  sortObj: initialSortObj
 }
 const barSizesReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -10,15 +23,13 @@ const barSizesReducer = (state = initialState, action) => {
       return {
         ...state,
         barSizes,
-        iteration: 0,
-        innerIteration: 0
+        sortObj: initialSortObj
       }
     case 'SET_BAR_SIZES':
       return {
         ...state,
         barSizes: action.barSizes,
-        iteration: action.iteration === undefined ? state.iteration+1 : action.iteration,
-        innerIteration: action.innerIteration === undefined ? state.innerIteration : action.innerIteration
+        sortObj: action.sortObj
       }
     default:
       return state

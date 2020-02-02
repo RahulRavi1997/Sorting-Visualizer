@@ -1,8 +1,7 @@
-function partition(items, left, right) {
-    var pivot = items[Math.floor((right + left) / 2)];
-    var i = left;
-    var j = right;
-    var completed = false;
+function doSort(items, left, right, pivot, pivoti, pivotj) {
+    pivot = pivot == null ? items[Math.floor((right + left) / 2)] : pivot;
+    var i = pivoti == null ? left : pivoti;
+    var j = pivotj == null ? right : pivotj;
     while (i <= j) {
         while (items[i] < pivot) {
             i++;
@@ -11,52 +10,110 @@ function partition(items, left, right) {
             j--;
         }
         if (i <= j) {
-            swap(items, i, j);
+            items = swap(items, i, j);
             i++;
             j--;
         }
+        if (i < j) {
+            return { items, pivot, pivoti: i, pivotj: j, partitionCompleted: false };
+        }
     }
-    if (i > j) {
-        completed = true;
-    }
-    return { iteration: i, completed };
+    return { items, pivot, pivoti: i, pivotj: null, partitionCompleted: true };
 }
 
-function quickSort(items, left, right) {
-    var index;
+function quickSort(items, iteration, nextLeftIter, nextRightIter, pivot, pivoti, pivotj, currentPartition, pivots) {
     var completed;
-    if (items.length > 1) {
-        const { iteration, isCompleted } = partition(items, left, right);
-        index = iteration;
-        if (left < index - 1) {
-            quickSort(items, left, index - 1);
+    var newiteration = iteration;
+    if (items.length <= 1) {
+        return {
+            newArray: items,
+            isCompleted: true
+        };
+    }
+    if ((nextLeftIter.length > 0) || (nextRightIter.length > 0)) {
+        var newBounds;
+        if (currentPartition == null) {
+            if (nextLeftIter.length > 0) {
+                currentPartition = "left";
+                newBounds = nextLeftIter[0];
+            } else {
+                currentPartition = "right";
+                newBounds = nextRightIter[0];
+            }
+        } else {
+            newBounds = currentPartition === "left" ? nextLeftIter[0] : nextRightIter[0];
         }
-        if (index < right) {
-            quickSort(items, index, right);
+        const { left, right } = newBounds;
+        var sortedObj = doSort(items, left, right, pivot, pivoti, pivotj);
+        pivot = sortedObj.pivot;
+        pivoti = sortedObj.pivoti;
+        pivotj = sortedObj.pivotj;
+        items = sortedObj.items;
+        if (!sortedObj.partitionCompleted) {
+            return {
+                newArray: items,
+                swappers: [pivoti, pivotj],
+                isCompleted: false,
+                newiteration,
+                newLeft: nextLeftIter,
+                newRight: nextRightIter,
+                newPivot: pivot,
+                newPivoti: pivoti,
+                newPivotj: pivotj,
+                newCurrentPartition: currentPartition,
+                newPivots: pivots
+            };
         }
-        completed = isCompleted;
+        if (currentPartition === "left") {
+            nextLeftIter = nextLeftIter.slice(1);
+        } else if (currentPartition === "right") {
+            nextRightIter = nextRightIter.slice(1);
+        }
+        if (left < pivoti - 1) {
+            nextLeftIter.push({ left, right: pivoti - 1 });
+        }
+        if (pivoti < right) {
+            nextRightIter.push({ left: pivoti, right });
+        }
+        pivots.push(pivoti);
+        newiteration++;
+    } else {
+        completed = true;
     }
     return {
         newArray: items,
-        isCompleted: completed
+        swappers: [],
+        isCompleted: completed,
+        newiteration,
+        newLeft: nextLeftIter,
+        newRight: nextRightIter,
+        newPivot: null,
+        newPivoti: null,
+        newPivotj: null,
+        newCurrentPartition: null,
+        newPivots: pivots
     };
 }
 
-function sort(array, iteration) {
-    var completed = false;
-    if (iteration > array.length) {
-        console.error("Error in quick sort. Max length exceeded!");
-        completed = true;
-    } else {
-        const { newArray, isCompleted } = quickSort(array, 0, array.length - 1);
-        completed = isCompleted;
-        array = newArray;
-    }
+function sort(array, sortObj) {
+    const { iteration, nextLeftIter, nextRightIter, pivot, pivoti, pivotj, currentPartition, pivots } = sortObj;
+    const { newArray, isCompleted, newiteration, newLeft, newRight, newPivot, newPivoti, newPivotj, newCurrentPartition, newPivots, swappers } =
+        quickSort(array, iteration, nextLeftIter || [{ left: 0, right: array.length - 1 }], nextRightIter || [], pivot, pivoti, pivotj, currentPartition, pivots);
     return {
-        newArray: array,
-        completed,
+        newArray,
+        completed: isCompleted,
         swappers: [],
-        newiteration: iteration + 1
+        newSortObj: {
+            iteration: newiteration,
+            selectedIteration: 0,
+            nextLeftIter: newLeft,
+            nextRightIter: newRight,
+            pivot: newPivot,
+            pivoti: newPivoti,
+            pivotj: newPivotj,
+            currentPartition: newCurrentPartition,
+            pivots: newPivots
+        }
     };
 }
 function swap(arr, first_Index, second_Index) {

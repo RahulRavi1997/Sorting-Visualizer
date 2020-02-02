@@ -17,9 +17,9 @@ class Sorter extends React.Component {
       swappers: []
     };
   }
-
+  
   UNSAFE_componentWillReceiveProps(nextProps) {
-    const { sorting, paused, speed, sortType, barSizes: array } = nextProps;
+    const { sorting, paused, speed, sortType, barSizes: array, sortObj } = nextProps;
     const sort =
       sortType === "quick" ? quicksort :
         sortType === "merge" ? mergesort :
@@ -31,8 +31,8 @@ class Sorter extends React.Component {
     }
     if ((sorting && !this.props.sorting) || (sorting && !paused && this.props.paused)) {
       console.log('startSorting', this.props.iteration);
-      this.doSort(sort, speed, sortType, array, this.props.iteration, this.props.innerIteration);
-    } else if (!sorting && this.props.sorting || paused) {
+      this.doSort(sort, speed, sortType, array, sortObj);
+    } else if (!sorting || paused) {
       console.log('stopSorting');
       if (!paused) {
         this.state.swappers = []; // TODO: work around mutating state
@@ -41,16 +41,16 @@ class Sorter extends React.Component {
     }
   }
 
-  doSort(sort, speed, sortType, array, iteration, innerIteration) {
+  doSort(sort, speed, sortType, array, sortObj) {
     var sortSpeed = Number(speed) === 0 ? 500 : (Number(speed) === 1 ? 250 : 50);
-    const { newArray, completed, swappers, newiteration, newinnerIteration } = sort(array, iteration, innerIteration);
+    const { newArray, completed, swappers, newSortObj } = sort(array, sortObj);
     if (!completed) {
-      var timeoutID = setTimeout(() => this.doSort(sort, speed, sortType, array, newiteration, newinnerIteration), sortSpeed);
+      var timeoutID = setTimeout(() => this.doSort(sort, speed, sortType, array, newSortObj), sortSpeed);
       this.setState({
         timeoutID,
         swappers
       });
-      this.props.setBarSizes(newArray, newiteration, newinnerIteration);
+      this.props.setBarSizes(newArray, newSortObj);
     } else {
       this.props.setSorting(false);
       this.setState({
@@ -61,17 +61,33 @@ class Sorter extends React.Component {
     }
   }
 
-  createBars = (barSizes, swappers, sortType, iteration) => {
+  createBars = (barSizes, swappers, sortType, sortObj) => {
+    var iteration, selectedIteration;
+    if (sortObj) {
+      iteration = sortObj.iteration;
+      selectedIteration = sortObj.selectedIteration;
+      iteration = sortObj.iteration;
+    }
     var elementbars = [];
     for (var i = 0; i < barSizes.length; i++) {
       var color = "#9e9e9e";
-      if (sortType === "selection" && i < iteration-1) {
-        color = "#5580af";
+      if (sortType === "selection") {
+        if (i < iteration) {
+          color = "#5580af";
+        }
+        if (i == selectedIteration) {
+          color = "#5f5f5f";
+        }
       } else if (sortType === "bubble" && i >= (barSizes.length - iteration)) {
         color = "#5580af";
-      }
+      } else if (sortType === "quick") {
+        if (sortObj.pivots && sortObj.pivots.length > 0 && sortObj.pivots.indexOf(i) !== -1) {
+          console.log('woww');
+          color = "#5580af";
+        }
+      } 
       if ((swappers[0] && swappers[0] === i) || (swappers[1] && swappers[1] === i)) {
-        color = "#5f5f5f";
+        color = "#007bff80";
       }
       elementbars.push(<Bar size={barSizes[i]} key={i} total={barSizes.length} color={color} />);
     }
@@ -79,12 +95,12 @@ class Sorter extends React.Component {
   }
 
   render() {
-    const { barSizes, sortType, iteration } = this.props;
+    const { barSizes, sortType, sortObj } = this.props;
     const { swappers } = this.state;
     return (
       <div className="sorter">
         <div className="barswrapper">
-          {this.createBars(barSizes, swappers, sortType, iteration )}
+          {this.createBars(barSizes, swappers, sortType, sortObj )}
         </div>
       </div>
     );
@@ -97,13 +113,12 @@ Sorter.defaultProps = {
 const mapStateToProps = state => {
   return {
     barSizes: state.barSizesReducer.barSizes,
-    iteration: state.barSizesReducer.iteration,
-    innerIteration: state.barSizesReducer.innerIteration
+    sortObj: state.barSizesReducer.sortObj
   }
 }
 const mapDispatchToProps = dispatch => {
   return {
-    setBarSizes: (barSizes, iteration, innerIteration) => { dispatch(setBarSizes(barSizes, iteration, innerIteration)) }
+    setBarSizes: (barSizes, sortObj) => { dispatch(setBarSizes(barSizes, sortObj)) }
   }
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Sorter);

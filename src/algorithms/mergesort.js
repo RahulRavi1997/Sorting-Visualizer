@@ -1,37 +1,31 @@
-function selectionsort(array, iteration) {
-    var completed = false;
-    if (iteration > array.length) {
-        console.error("Error in selection sort. Max length exceeded!");
-    }
-    var leastValue = Number.MAX_VALUE;
-    var leastIndex = Number.MAX_VALUE;
-    var newArray = array;
-    if (iteration == array.length-1 || array.length === 1) {
-        completed = true;
+function merge(left, right, array){
+    if (left.length == 0 && right.length == 0) {
+        return array;
+    } else if (left.length == 0) {
+        return array.concat(right);
+    } else if (right.length == 0) {
+        return array.concat(left);
+    } else if (left[0] < right[0]) {
+        array.push(left.shift());
     } else {
-        for (var i = iteration; i <= array.length; i++) {
-            if (array[i] < leastValue) {
-                leastValue = array[i];
-                leastIndex = i;
-            }
-        }
-        if (leastIndex != iteration) {
-            newArray = swap(newArray, iteration, leastIndex);
-        }
+        array.push(right.shift());
     }
-    console.log('iteration, newArray', iteration, iteration+1, newArray);
-    return {
-        newArray,
-        completed,
-        swappers: [leastIndex, iteration],
-        newiteration: iteration+1
-    };
-}
-function swap(arr, first_Index, second_Index) {
-    var temp = arr[first_Index];
-    arr[first_Index] = arr[second_Index];
-    arr[second_Index] = temp;
-    return arr;
+    return merge(left, right, array);
 }
 
-export default selectionsort;
+function sort(array) {
+    if (array.length > 1) {
+        return merge(sort(array.slice(0, Math.ceil(array.length/2))), sort(array.slice(Math.ceil(array.length/2))), []);
+    }
+}
+function mergeSort(array, sortObj){
+    const {} = sortObj;
+    sort(array);
+    return {
+        newArray: array,
+        completed: true,
+        swappers: [],
+        sortObj: {}
+    }
+}
+export default mergeSort;

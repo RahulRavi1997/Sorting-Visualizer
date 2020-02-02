@@ -52,7 +52,6 @@ class Controls extends React.Component {
   render() {
     const { sortType, sorting, paused, speed, bars } = this.state;
     const { barSizes } = this.props;
-    console.log('render', barSizes);
     return (
       <div className="controls-wrapper">
         <Sorter sortType={sortType} sorting={sorting} paused={paused} speed={speed} bars={bars} barSizes={barSizes} setSorting={this.setSorting} />

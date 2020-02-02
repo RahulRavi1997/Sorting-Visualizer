@@ -4,33 +4,43 @@ function swap(arr, first_Index, second_Index) {
     arr[second_Index] = temp;
     return arr;
 }
-function selectionsort(array, iteration) {
+function selectionsort(array, sortObj) {
+    var { iteration, selectedIteration, leastIndex, leastValue } = sortObj;
     var completed = false;
     if (iteration > array.length) {
         console.error("Error in selection sort. Max length exceeded!");
         completed=true;
     }
-    var leastValue = Number.MAX_VALUE;
-    var leastIndex = Number.MAX_VALUE;
     var newArray = array;
     if (iteration == array.length-1 || array.length === 1) {
         completed = true;
     } else {
-        for (var i = iteration; i <= array.length; i++) {
-            if (array[i] < leastValue) {
-                leastValue = array[i];
-                leastIndex = i;
+        if (selectedIteration > array.length) {
+            if (leastIndex != iteration) {
+                newArray = swap(newArray, iteration, leastIndex);
             }
-        }
-        if (leastIndex != iteration) {
-            newArray = swap(newArray, iteration, leastIndex);
+            iteration++;
+            selectedIteration = iteration;
+            leastValue = Number.MAX_VALUE;
+            leastIndex = Number.MAX_VALUE;
+        } else {
+            if (array[selectedIteration] < leastValue) {
+                leastValue = array[selectedIteration];
+                leastIndex = selectedIteration;
+            }
+            selectedIteration++;
         }
     }
     return {
         newArray,
         completed,
         swappers: [leastIndex, iteration],
-        newiteration: iteration+1
+        newSortObj: {
+            iteration,
+            selectedIteration,
+            leastIndex,
+            leastValue
+        }
     };
 }
 
