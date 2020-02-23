@@ -13,7 +13,7 @@ const initialSortObj = {
   pivots: []
 }
 const initialState = {
-  barSizes: Array.from({ length: 50 }, () => Math.floor(Math.random() * 50)),
+  barSizes: Array.from({ length: 10 }, () => Math.floor(Math.random() * 50)),
   sortObj: initialSortObj
 }
 const barSizesReducer = (state = initialState, action) => {

@@ -1,20 +1,20 @@
 function doSort(items, left, right, pivot, pivoti, pivotj) {
-    pivot = pivot == null ? items[Math.floor((right + left) / 2)] : pivot;
+    pivot = pivot == null ? items[left] : pivot;
     var i = pivoti == null ? left : pivoti;
     var j = pivotj == null ? right : pivotj;
     while (i <= j) {
         while (items[i] < pivot) {
             i++;
+            return { items, pivot, pivoti: i, pivotj: j, partitionCompleted: false };
         }
         while (items[j] > pivot) {
             j--;
+            return { items, pivot, pivoti: i, pivotj: j, partitionCompleted: false };
         }
         if (i <= j) {
             items = swap(items, i, j);
             i++;
             j--;
-        }
-        if (i < j) {
             return { items, pivot, pivoti: i, pivotj: j, partitionCompleted: false };
         }
     }

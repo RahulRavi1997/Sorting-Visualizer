@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import '../App.css';
 import selectionsort from '../algorithms/selectionsort';
 import bubblesort from '../algorithms/bubblesort';
-import mergesort from '../algorithms/mergesort';
+import mergesort from "../algorithms/mergesort";
 import quicksort from '../algorithms/quicksort';
 
 class Sorter extends React.Component {
@@ -81,10 +81,18 @@ class Sorter extends React.Component {
       } else if (sortType === "bubble" && i >= (barSizes.length - iteration)) {
         color = "#5580af";
       } else if (sortType === "quick") {
+        if (sortObj.pivoti === i) {
+          color = "#5f5f5f";
+        }
+        if (sortObj.pivotj === i) {
+          color = "#5f5f5f";
+        }
         if (sortObj.pivots && sortObj.pivots.length > 0 && sortObj.pivots.indexOf(i) !== -1) {
-          console.log('woww');
           color = "#5580af";
         }
+        // if (sortObj.pivot === i) {
+        //   color = "#ff50507d";
+        // }
       } 
       if ((swappers[0] && swappers[0] === i) || (swappers[1] && swappers[1] === i)) {
         color = "#007bff80";

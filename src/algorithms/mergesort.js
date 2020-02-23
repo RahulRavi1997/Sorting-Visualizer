@@ -1,4 +1,5 @@
-function merge(left, right, array){
+function merge(left, right, array) {
+    console.log('pks2', left, right, array);
     if (left.length == 0 && right.length == 0) {
         return array;
     } else if (left.length == 0) {
@@ -10,19 +11,32 @@ function merge(left, right, array){
     } else {
         array.push(right.shift());
     }
+    console.log('pks1', left, right, array);
     return merge(left, right, array);
 }
 
 function sort(array) {
-    if (array.length > 1) {
-        return merge(sort(array.slice(0, Math.ceil(array.length/2))), sort(array.slice(Math.ceil(array.length/2))), []);
+    var newArray;
+    if (array.length <= 1) {
+        newArray = array;
+    } else {
+        console.log('pks',array, array.slice(0, Math.ceil(array.length / 2)),array.slice(Math.ceil(array.length / 2)));
+        newArray = merge(
+            sort(array.slice(0, Math.ceil(array.length / 2))).newArray,
+            sort(array.slice(Math.ceil(array.length / 2))).newArray,
+            []
+        );
     }
-}
-function mergeSort(array, sortObj){
-    const {} = sortObj;
-    sort(array);
     return {
-        newArray: array,
+        newArray, 
+    };
+}
+
+function mergeSort(array, sortObj) {
+    const { } = sortObj;
+    const { newArray } = sort(array);
+    return {
+        newArray,
         completed: true,
         swappers: [],
         sortObj: {}
