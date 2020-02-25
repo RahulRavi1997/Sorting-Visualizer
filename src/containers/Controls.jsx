@@ -63,7 +63,7 @@ class Controls extends React.Component {
             <button className={`btn btn-default sort-type ${sortType === "selection" ? "active" : ""}`} disabled={sorting} autoFocus value="selection" onClick={this.selectSort}>Selection Sort</button>
             <button className={`btn btn-default sort-type ${sortType === "bubble" ? "active" : ""}`} disabled={sorting} value="bubble" onClick={this.selectSort}>Bubble Sort</button>
             <button className={`btn btn-default sort-type ${sortType === "quick" ? "active" : ""}`} disabled={sorting} value="quick" onClick={this.selectSort}>Quick Sort</button>
-            <button className={`btn btn-default sort-type ${sortType === "merge" ? "active" : ""}`} disabled={sorting} value="merge" onClick={this.selectSort}>Merge Sort</button>
+            <button className={`btn btn-default sort-type ${sortType === "insertion" ? "active" : ""}`} disabled={sorting} value="insertion" onClick={this.selectSort}>Insertion Sort</button>
 
             <div className="row m-0 mt-3">
               <div className="col-6">

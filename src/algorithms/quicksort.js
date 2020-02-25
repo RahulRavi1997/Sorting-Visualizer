@@ -23,7 +23,7 @@ function doSort(items, left, right, pivot, pivoti, pivotj) {
 
 function quickSort(items, iteration, nextLeftIter, nextRightIter, pivot, pivoti, pivotj, currentPartition, pivots) {
     var completed;
-    var newiteration = iteration;
+    var newiteration = iteration;   
     if (items.length <= 1) {
         return {
             newArray: items,

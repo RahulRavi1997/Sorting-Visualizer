@@ -4,6 +4,7 @@ const initialSortObj = {
   selectedIteration: 0,
   leastIndex: Number.MAX_VALUE,
   leastValue: Number.MAX_VALUE,
+  partitionCompleted: false,
   nextLeftIter: null,
   nextRightIter: null,
   pivoti: null,
