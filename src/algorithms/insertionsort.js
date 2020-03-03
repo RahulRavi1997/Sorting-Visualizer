@@ -31,7 +31,7 @@ function insertionSort(array, sortObj) {
     return {
         newArray,
         completed,
-        swappers: [iteration, j],
+        swappers: [iteration, j+1],
         newSortObj: {
             iteration,
             pivot,

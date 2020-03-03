@@ -90,9 +90,9 @@ class Sorter extends React.Component {
         if (sortObj.pivots && sortObj.pivots.length > 0 && sortObj.pivots.indexOf(i) !== -1) {
           color = "#5580af";
         }
-        if (sortObj.pivot === i) {
-          color = "#ff50507d";
-        }
+        // if (sortObj.pivot === i) {
+        //   color = "#ff50507d";
+        // }
       } 
       if ((swappers[0] && swappers[0] === i) || (swappers[1] && swappers[1] === i)) {
         color = "#007bff80";
