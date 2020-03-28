@@ -1,11 +1,10 @@
 {
-  "homepage": "https://rahulravi1997.github.io/Sorting-Visualizer/public/",
+  "homepage": "https://rahulravi1997.github.io/Sorting-Visualizer",
   "name": "contacts",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "bootstrap": "^4.4.1",
-    "gh-pages": "^2.2.0",
     "react": "^16.11.0",
     "react-bootstrap": "^1.0.0-beta.16",
     "react-dom": "^16.11.0",
@@ -36,5 +35,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^2.2.0"
   }
 }
